@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Event Feedback</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+
+    form {
+      max-width: 500px;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      padding: 8px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #previewImage {
+      width: 100px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    #previewImage.enlarged {
+      width: 300px;
+    }
+
+    #charCount {
+      font-size: 0.9em;
+      color: gray;
+      text-align: right;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      font-size: 1em;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #feeDisplay, #confirmation {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="feedbackForm">
+    <h2>Event Feedback</h2>
+
+   
+    <label for="phone">Phone Number</label>
+    <input type="text" id="phone" placeholder="e.g., 123-456-7890" onblur="validatePhone()" required />
+    <div id="phoneError" class="error"></div>
+
+   
+    <label for="eventType">Select Event</label>
+    <select id="eventType" onchange="displayFee()" required>
+      <option value="">-- Select an event --</option>
+      <option value="cleanup">Community Cleanup</option>
+      <option value="workshop">Workshop</option>
+      <option value="run">Charity Run</option>
+    </select>
+    <div id="feeDisplay"></div>
+
+  
+    <label for="feedback">Your Feedback</label>
+    <textarea id="feedback" placeholder="Share your thoughts..." onkeyup="countCharacters()" required></textarea>
+    <div id="charCount">0 characters</div>
+
+   
+    <label>Click to Enlarge Image</label>
+    <img id="previewImage" src="event-thumbnail.jpg" alt="Event Image" title="Double-click to enlarge" ondblclick="toggleImageSize()" />
+
+    
+    <button type="button" onclick="submitFeedback()">Submit Feedback</button>
+    <div id="confirmation"></div>
+  </form>
+
+  <script>
+    function validatePhone() {
+      const phoneInput = document.getElementById("phone");
+      const errorDiv = document.getElementById("phoneError");
+      const phoneRegex = /^\d{3}-\d{3}-\d{4}$/;
+
+      if (!phoneRegex.test(phoneInput.value)) {
+        errorDiv.textContent = "Phone number must be in format 123-456-7890";
+      } else {
+        errorDiv.textContent = "";
+      }
+    }
+
+    function displayFee() {
+      const event = document.getElementById("eventType").value;
+      const feeDisplay = document.getElementById("feeDisplay");
+      let fee = "";
+
+      switch (event) {
+        case "cleanup": fee = "$0 (Free Event)"; break;
+        case "workshop": fee = "$25"; break;
+        case "run": fee = "$10"; break;
+        default: fee = "";
+      }
+
+      feeDisplay.textContent = fee ? `Event Fee: ${fee}` : "";
+    }
+
+    function countCharacters() {
+      const feedback = document.getElementById("feedback").value;
+      document.getElementById("charCount").textContent = `${feedback.length} characters`;
+    }
+
+    function toggleImageSize() {
+      const image = document.getElementById("previewImage");
+      image.classList.toggle("enlarged");
+    }
+
+    function submitFeedback() {
+      const phoneError = document.getElementById("phoneError").textContent;
+      if (phoneError) {
+        alert("Please fix phone number before submitting.");
+        return;
+      }
+
+      document.getElementById("confirmation").textContent =
+        "Thank you! Your feedback has been submitted.";
+    }
+  </script>
+
+</body>
+</html>

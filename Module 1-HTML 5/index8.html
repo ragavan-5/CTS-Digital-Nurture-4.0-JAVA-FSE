@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Find Nearby Events</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 1em;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    #error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Locate Nearby Events</h2>
+  <button onclick="findNearbyEvents()">Find Nearby Events</button>
+
+  <div id="result"></div>
+  <div id="error"></div>
+
+  <script>
+    function findNearbyEvents() {
+      const resultDiv = document.getElementById("result");
+      const errorDiv = document.getElementById("error");
+      resultDiv.textContent = "";
+      errorDiv.textContent = "";
+
+      if (!navigator.geolocation) {
+        errorDiv.textContent = "Geolocation is not supported by your browser.";
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude.toFixed(6);
+          const lon = position.coords.longitude.toFixed(6);
+          resultDiv.textContent = `Your location: Latitude ${lat}, Longitude ${lon}`;
+        },
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorDiv.textContent = "Permission denied. Please allow location access.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorDiv.textContent = "Location information is unavailable.";
+              break;
+            case error.TIMEOUT:
+              errorDiv.textContent = "Location request timed out.";
+              break;
+            default:
+              errorDiv.textContent = "An unknown error occurred.";
+          }
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000, 
+          maximumAge: 0
+        }
+      );
+    }
+  </script>
+
+</body>
+</html>

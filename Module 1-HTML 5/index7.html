@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Event Preferences</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 300px;
+      padding: 8px;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      font-size: 1em;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Choose Your Preferred Event Type</h2>
+
+  <label for="eventType">Event Type:</label>
+  <select id="eventType" onchange="savePreference()">
+    <option value="">-- Select an event --</option>
+    <option value="cleanup">Community Cleanup</option>
+    <option value="workshop">Workshop</option>
+    <option value="run">Charity Run</option>
+  </select>
+
+  <div id="status"></div>
+
+  <button onclick="clearPreferences()">Clear Preferences</button>
+
+  <script>
+    const eventSelect = document.getElementById("eventType");
+    const statusDiv = document.getElementById("status");
+
+    function savePreference() {
+      const selected = eventSelect.value;
+      localStorage.setItem("preferredEvent", selected);
+      sessionStorage.setItem("tempSelection", selected); 
+      statusDiv.textContent = `Saved preference: ${selected}`;
+    }
+
+    function loadPreference() {
+      const stored = localStorage.getItem("preferredEvent");
+      if (stored) {
+        eventSelect.value = stored;
+        statusDiv.textContent = `Loaded saved preference: ${stored}`;
+      }
+    }
+
+    function clearPreferences() {
+      localStorage.clear();
+      sessionStorage.clear();
+      eventSelect.value = "";
+      statusDiv.textContent = "Preferences cleared!";
+    }
+
+    
+    window.onload = loadPreference;
+  </script>
+
+</body>
+</html>
